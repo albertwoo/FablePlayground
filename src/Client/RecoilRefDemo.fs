@@ -28,17 +28,25 @@ let extensionConfigView =
             let gotConfig, setGotConfig = React.useState None
 
             Html.div [
-                Html.div "extension config"
+                prop.classes [ Tw.``p-10``; Tw.rounded; Tw.``shadow-lg`` ]
+                prop.children [
+                    Html.div "extension config"
 
-                config.GetConfigRender { Config = "123"; Ref = getConfigRef }
+                    Html.div [
+                        prop.classes [ Tw.``shadow-md``; Tw.``p-4``; Tw.``my-2``; Tw.rounded; Tw.``bg-red-200`` ]
+                        prop.children [
+                            config.GetConfigRender { Config = "123"; Ref = getConfigRef }
+                        ]
+                    ]
 
-                Html.button [
-                    prop.text "Click to get config"
-                    prop.onClick (fun _ -> getConfigRef.current |> Option.map (fun ref -> ref()) |> setGotConfig)
+                    Html.button [
+                        prop.text "Click to get config"
+                        prop.onClick (fun _ -> getConfigRef.current |> Option.map (fun ref -> ref()) |> setGotConfig)
+                    ]
+
+                    Html.div "Got config"
+                    Html.div (string gotConfig)
                 ]
-
-                Html.div "Got config"
-                Html.div (string gotConfig)
             ])    
 
 
