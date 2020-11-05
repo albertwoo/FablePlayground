@@ -30,6 +30,8 @@ let render (state: State) (dispatch: Msg -> unit) =
         prop.style [ style.padding 20 ]
         prop.children [
           Counter.counter()
+
+          RecoilRefDemo.demoView()
         ]
     ]
 

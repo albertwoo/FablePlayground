@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="RecoilRefDemo.fs" />
     <Compile Include="Counter.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>

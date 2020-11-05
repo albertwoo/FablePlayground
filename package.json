@@ -1,7 +1,8 @@
 {
   "dependencies": {
-    "react": "^17.0.1",
+    "react": "^16.14.0",
     "react-dom": "^17.0.1",
+    "recoil": "^0.1.2",
     "remotedev": "^0.2.9"
   }
 }
