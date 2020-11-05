@@ -1,0 +1,9 @@
+*.fs.js
+.ionide
+.fable
+.cache
+bin
+obj
+node_modules
+dist
+devClient
