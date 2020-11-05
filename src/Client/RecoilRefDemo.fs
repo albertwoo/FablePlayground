@@ -83,7 +83,7 @@ let demoExtension =
 
 let demoView = React.functionComponent(fun () ->
     Html.div [
-        prop.classes [ Tw.``p-10``; Tw.``mt-10``; Tw.rounded; Tw.``bg-purple-100`` ]
+        prop.classes [ Tw .``p-10``; Tw.``mt-10``; Tw.rounded; Tw.``bg-purple-100`` ]
         prop.children [
             Recoil.root [
                 extensionConfigView()
