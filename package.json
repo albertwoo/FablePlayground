@@ -4,5 +4,10 @@
     "react-dom": "^17.0.1",
     "recoil": "^0.1.2",
     "remotedev": "^0.2.9"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8.1.4",
+    "tailwindcss": "^1.9.6"
   }
 }

@@ -3,15 +3,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common.fs" />
     <Compile Include="RecoilRefDemo.fs" />
     <Compile Include="Counter.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.7.2" />
     <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
     <PackageReference Include="Fable.Elmish.Debugger" Version="3.0.3" />
     <PackageReference Include="Fable.Elmish.HMR" Version="4.0.1" />
     <PackageReference Include="Feliz" Version="1.14.1" />
     <PackageReference Include="Feliz.Recoil" Version="0.18.0" />
+    <PackageReference Include="Zanaptak.TypedCssClasses" Version="0.4.0" />
   </ItemGroup>
 </Project>
