@@ -27,11 +27,22 @@ let update (msg: Msg) (state: State) =
 
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
-        prop.style [ style.padding 20 ]
+        prop.classes []
         prop.children [
-          Counter.counter()
+            Html.div [ 
+                prop.classes [ Tw.``bg-blue-200``; Tw.``p-10`` ]
+                prop.children [
+                    Html.div state.Count
+                    Html.button [
+                        prop.text "+"
+                        prop.onClick (fun _ -> Increase |> dispatch)
+                    ]
+                ]
+            ]
 
-          RecoilRefDemo.demoView()
+            Counter.counter()
+
+            RecoilRefDemo.demoView()
         ]
     ]
 

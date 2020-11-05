@@ -85,6 +85,7 @@ let demoExtension =
             )
 
             Html.div [
+                prop.classes [ Tw.``font-semibold`` ]
                 prop.text "demo extension"
             ])
 
