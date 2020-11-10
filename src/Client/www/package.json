@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@babel/core": "^7.12.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "recoil": "^0.1.2",
+    "tailwindcss": "^1.9.6",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8.1.4",
+    "postcss-modules": "^3.2.2"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4",
+    "remotedev": "^0.2.9"
+  }
+}

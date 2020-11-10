@@ -1,0 +1,9 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+.button {
+    color: aliceblue;
+}
+
+@import "tailwindcss/utilities";

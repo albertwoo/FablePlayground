@@ -2,8 +2,13 @@
 .ionide
 .fable
 .cache
+.parcel-cache
+.dist
+.dist_prod
+.clientjs
 bin
 obj
 node_modules
 dist
 devClient
+src/Client/www/.DS_Store
