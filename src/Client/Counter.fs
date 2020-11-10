@@ -12,7 +12,7 @@ let counter =
                 prop.children [
                     Html.button [
                         prop.text "+"
-                        prop.onClick (fun _ -> setCount (count + 1))
+                        prop.onClick (fun _ -> setCount (count + 10))
                     ]
                     Html.text count
                     Html.button [

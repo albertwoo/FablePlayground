@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "@babel/core": "^7.12.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "recoil": "^0.1.2",
-    "tailwindcss": "^1.9.6",
-    "autoprefixer": "^10.0.1",
-    "postcss": "^8.1.4",
-    "postcss-modules": "^3.2.2"
+    "postcss-modules": "^3.2.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "recoil": "^0.1.2"
   },
   "devDependencies": {
     "parcel": "^1.12.4",
-    "remotedev": "^0.2.9"
+    "remotedev": "^0.2.9",
+    "tailwindcss": "^1.9.6",
+    "@fullhuman/postcss-purgecss": "^3.0.0",
+    "autoprefixer": "^9.8.6",
+    "postcss-nested": "^4.2.3"
   }
 }

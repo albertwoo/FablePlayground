@@ -13,6 +13,11 @@ fsi.CommandLineArgs
 |> Array.skip 1
 |> BuildTask.setupContextFromArgv 
 
+let platformTool tool winTool =
+    let tool = if Environment.isUnix then tool else winTool
+    match ProcessUtils.tryFindFileOnPath tool with
+    | Some t -> t
+    | _ -> failwith (tool + " was not found in path. ")
 
 let run cmd args workingDir =
     let arguments = args |> String.split ' ' |> Arguments.OfArgs
@@ -24,22 +29,27 @@ let run cmd args workingDir =
     |> ignore
 
 
+let node   = run (platformTool "node" "node.exe")
+let yarn   = run (platformTool "yarn" "yarn.cmd")
+let dotnet = run (platformTool "dotnet" "dotnet.exe")  
+
+
 let buildClientJs buildOrWatch =
-    let mode = if buildOrWatch then "build" else "watch"
-    run "dotnet" (sprintf "fable %s . --outDir ./www/.clientjs" mode) "./src/Client"
+    let mode = if buildOrWatch then "" else " watch"
+    dotnet (sprintf "fable%s . --outDir ./www/.clientjs --define FABLECLIENT" mode) "./src/Client"
 
 
 let checkEnv =
     BuildTask.create "Check environment" [] {
-        run "yarn" "--version" ""
-        run "yarn" "install" "./src/Client/www"
-        run "dotnet" "tool restore" ""
+        yarn "--version" ""
+        yarn "install" "./src/Client/www"
+        dotnet "tool restore" ""
     }
 
 
 let watchTailwindForClient =
     BuildTask.create "Watch tailwind css for client dev" [ checkEnv ] {
-        let buildTailwind() = run "yarn" "tailwindcss build css/app.css -o css/app-dev.css" "./src/Client/www"
+        let buildTailwind() = yarn "tailwindcss build css/app-dev.css -o css/app.css" "./src/Client/www"
         buildTailwind()
         ChangeWatcher.run 
             (fun _ -> printfn "Rebuild tailwind..."; buildTailwind()) 
@@ -49,13 +59,14 @@ let watchTailwindForClient =
     }
 
 
-let startDev =
-    BuildTask.create "Start development" [ watchTailwindForClient ] {
+let runDev =
+    BuildTask.create "StartDev" [ watchTailwindForClient ] {
         buildClientJs true
         
         [
             async {
-                run "yarn" "parcel index.html --out-dir .dist" "./src/Client/www"
+                Shell.cleanDir "./src/Client/www/.dist"
+                yarn "parcel serve index.html --out-dir .dist" "./src/Client/www"
             }
             async {
                 buildClientJs false
@@ -67,12 +78,12 @@ let startDev =
     }
 
 
-let buildForProd =
+let bundleProd =
     BuildTask.create "BundleProd" [ checkEnv ] {
         Shell.cleanDir "./src/Client/www/.dist_prod"
         buildClientJs true
-        run "yarn" "parcel build index.html --out-dir .dist_prod" "./src/Client/www"
+        yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" "./src/Client/www"
     }
 
 
-BuildTask.runOrDefault startDev
+BuildTask.runOrDefault runDev
