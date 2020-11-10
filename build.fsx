@@ -9,6 +9,9 @@ open Fake.IO.Globbing.Operators
 open BlackFox.Fake
 
 
+type Env = PROD | DEV
+
+
 fsi.CommandLineArgs
 |> Array.skip 1
 |> BuildTask.setupContextFromArgv 
@@ -34,9 +37,9 @@ let yarn   = run (platformTool "yarn" "yarn.cmd")
 let dotnet = run (platformTool "dotnet" "dotnet.exe")  
 
 
-let buildClientJs buildOrWatch =
-    let mode = if buildOrWatch then "" else " watch"
-    dotnet (sprintf "fable%s . --outDir ./www/.clientjs --define FABLECLIENT" mode) "./src/Client"
+let buildClientJs env =
+    let env = match env with PROD -> "" | DEV -> " watch"
+    dotnet (sprintf "fable%s . --outDir ./www/.clientjs" env) "./src/Client"
 
 
 let checkEnv =
@@ -61,15 +64,14 @@ let watchTailwindForClient =
 
 let runDev =
     BuildTask.create "StartDev" [ watchTailwindForClient ] {
-        buildClientJs true
-        
         [
             async {
-                Shell.cleanDir "./src/Client/www/.dist"
-                yarn "parcel serve index.html --out-dir .dist" "./src/Client/www"
+                buildClientJs DEV
             }
             async {
-                buildClientJs false
+                do! Async.Sleep 15_000
+                Shell.cleanDir "./src/Client/www/.dist"
+                yarn "parcel serve index.html --out-dir .dist" "./src/Client/www"
             }
         ]
         |> Async.Parallel
@@ -81,7 +83,7 @@ let runDev =
 let bundleProd =
     BuildTask.create "BundleProd" [ checkEnv ] {
         Shell.cleanDir "./src/Client/www/.dist_prod"
-        buildClientJs true
+        buildClientJs PROD
         yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" "./src/Client/www"
     }
 
