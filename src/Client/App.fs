@@ -1,6 +1,5 @@
 module App
 
-open System
 open Elmish
 open Elmish.React
 open Elmish.Debug
@@ -39,11 +38,6 @@ let render (state: State) (dispatch: Msg -> unit) =
                     ]
                 ]
             ]
-
-            Counter.counter()
-
-            RecoilRefDemo.demoView()
-
             Html.div [
                 prop.classes []
                 prop.text (Json.toString {| DemoJson = "name" |})

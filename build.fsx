@@ -1,11 +1,12 @@
-#r "nuget: Fake.Core.Process"
-#r "nuget: Fake.IO.FileSystem"
-#r "nuget: BlackFox.Fake.BuildTask"
+#r "nuget: Fake.Core.Process,5.20.0"
+#r "nuget: Fake.IO.FileSystem,5.20.0"
+#r "nuget: BlackFox.Fake.BuildTask,0.1.3"
 
+open System.IO
 open Fake.Core
 open Fake.IO
-open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
+open Fake.IO.FileSystemOperators
 open BlackFox.Fake
 
 
@@ -32,14 +33,28 @@ let run cmd args workingDir =
     |> ignore
 
 
-let node   = run (platformTool "node" "node.exe")
 let yarn   = run (platformTool "yarn" "yarn.cmd")
 let dotnet = run (platformTool "dotnet" "dotnet.exe")  
 
 
-let buildClientJs env =
-    let env = match env with PROD -> "" | DEV -> " watch"
-    dotnet (sprintf "fable%s . --outDir ./www/.clientjs" env) "./src/Client"
+let watchFile fn file =
+    let watcher = new FileSystemWatcher(Path.getDirectory file, Path.GetFileName file)
+    watcher.NotifyFilter <-  NotifyFilters.CreationTime ||| NotifyFilters.Size ||| NotifyFilters.LastWrite
+    watcher.Changed.Add (fun _ ->
+        printfn "File changed %s" file
+        fn())
+    watcher.EnableRaisingEvents <- true
+    watcher
+
+
+let buildClientJs env watch =
+    let mode = match watch with false -> "" | true -> " watch"
+    let define = match env with PROD -> "" | DEV -> " --define DEBUG"
+    dotnet (sprintf "fable%s . --outDir ./www/.clientjs%s" mode define) "./src/Client"
+
+let buildClientCss() =
+    printfn "Build client css"
+    yarn "tailwindcss build css/app-dev.css -o css/app.css" "./src/Client/www"
 
 
 let checkEnv =
@@ -50,28 +65,27 @@ let checkEnv =
     }
 
 
-let watchTailwindForClient =
-    BuildTask.create "Watch tailwind css for client dev" [ checkEnv ] {
-        let buildTailwind() = yarn "tailwindcss build css/app-dev.css -o css/app.css" "./src/Client/www"
-        buildTailwind()
-        ChangeWatcher.run 
-            (fun _ -> printfn "Rebuild tailwind..."; buildTailwind()) 
-            (!!"./src/Client/www/css/app.css"
-             ++"./src/Client/www/tailwind.config.js")
-        |> ignore
-    }
-
-
 let runDev =
-    BuildTask.create "StartDev" [ watchTailwindForClient ] {
+    BuildTask.create "StartDev" [ checkEnv ] {
+        Shell.cleanDir "./src/Client/www/.clientjs"
+        buildClientCss()
+        buildClientJs DEV false
         [
             async {
-                buildClientJs DEV
+                buildClientJs DEV true
             }
             async {
-                do! Async.Sleep 15_000
+                let watchers =
+                    !!"./src/Client/www/css/app-dev.css"
+                    ++"./src/Client/www/tailwind.config.js"
+                    |> Seq.toList
+                    |> List.map (watchFile buildClientCss)
+                
                 Shell.cleanDir "./src/Client/www/.dist"
                 yarn "parcel serve index.html --out-dir .dist" "./src/Client/www"
+
+                printfn "Clean up..."
+                watchers |> List.iter (fun x -> x.Dispose())
             }
         ]
         |> Async.Parallel
@@ -82,8 +96,10 @@ let runDev =
 
 let bundleProd =
     BuildTask.create "BundleProd" [ checkEnv ] {
+        Shell.cleanDir "./src/Client/www/.clientjs"
         Shell.cleanDir "./src/Client/www/.dist_prod"
-        buildClientJs PROD
+        buildClientCss()
+        buildClientJs PROD false
         yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" "./src/Client/www"
     }
 

@@ -1,4 +1,4 @@
 ﻿module Json
 
 
-let toString data = Thoth.Json.Encode.Auto.toString(4, data)
+let inline toString data = Thoth.Json.Encode.Auto.toString(4, data)
