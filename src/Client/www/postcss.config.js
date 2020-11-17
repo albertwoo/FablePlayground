@@ -1,17 +1,27 @@
-const purgecss = require('@fullhuman/postcss-purgecss')
+const purgecss = require('@fullhuman/postcss-purgecss')({
+    whitelist: ['html', 'body'],
+    // Specify the paths to all of the template files in your project
+    content: [
+        '**/*.html',
+        '**/*.js',
+    ],
+    // This is the function used to extract class names from your templates
+    defaultExtractor: content => {
+        // Capture as liberally as possible, including things like `h-(screen-1.5)`
+        const broadMatches = content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []
+        // Capture classes within other delimiters like .block(class="w-1/2") in Pug
+        const innerMatches = content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || []
+        return broadMatches.concat(innerMatches)
+    }
+})
+
 
 module.exports = {
     plugins: [
-        purgecss({
-            // Specify the paths to all of the template files in your project
-            whitelist: ['body'],
-            content: [
-                '../**/*.fs',
-            ],
-            // Include any special characters you're using in this regular expression
-            defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
-        }),
         require('autoprefixer'),
-        require('postcss-nested')
+        require('postcss-nested'),
+        ...process.env.NODE_ENV === 'production'
+            ? [purgecss]
+            : []
     ]
 }

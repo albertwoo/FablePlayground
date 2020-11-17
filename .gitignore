@@ -1,11 +1,12 @@
 *.fs.js
+*proj.user
 .ionide
 .fable
 .cache
 .parcel-cache
 .dist
 .dist_prod
-.clientjs
+fablejs
 .vs
 bin
 obj

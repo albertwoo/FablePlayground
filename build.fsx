@@ -12,6 +12,8 @@ open BlackFox.Fake
 
 type Env = PROD | DEV
 
+let clientProjectDir = "./src/Client"
+
 
 fsi.CommandLineArgs
 |> Array.skip 1
@@ -47,14 +49,32 @@ let watchFile fn file =
     watcher
 
 
-let buildClientJs env watch =
+// It will generate all source code for the target project in the dir and put the js under fablejs
+let runFable dir env watch =
     let mode = match watch with false -> "" | true -> " watch"
     let define = match env with PROD -> "" | DEV -> " --define DEBUG"
-    dotnet (sprintf "fable%s . --outDir ./www/.clientjs%s" mode define) "./src/Client"
+    dotnet (sprintf "fable%s . --outDir ./www/fablejs%s" mode define) dir
 
-let buildClientCss() =
+let cleanGeneratedJs dir = Shell.cleanDir (dir </> "www/fablejs")
+
+// It will generate css under the starget dir`s www/css folder
+let buildTailwindCss dir =
     printfn "Build client css"
-    yarn "tailwindcss build css/app-dev.css -o css/app.css" "./src/Client/www"
+    yarn "tailwindcss build css/app-dev.css -o css/app.css" (dir </> "www")
+
+let watchTailwindCss dir =
+    !!(dir </> "www/css/app-dev.css")
+    ++(dir </> "www/tailwind.config.js")
+    |> Seq.toList
+    |> List.map (watchFile (fun () -> buildTailwindCss dir))
+
+let serveDevJs dir =
+    Shell.cleanDir (dir </> "www/.dist")
+    yarn "parcel serve index.html --out-dir .dist" (dir </> "www")
+
+let runBundle dir =
+    Shell.cleanDir (dir </> "www/.dist_prod")
+    yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" (dir </> "www")
 
 
 let checkEnv =
@@ -65,25 +85,23 @@ let checkEnv =
     }
 
 
-let runDev =
-    BuildTask.create "StartDev" [ checkEnv ] {
-        Shell.cleanDir "./src/Client/www/.clientjs"
-        buildClientCss()
-        buildClientJs DEV false
+let preBuildClient =
+    BuildTask.create "PreBuildClient" [ checkEnv ] {
+        cleanGeneratedJs clientProjectDir
+        buildTailwindCss clientProjectDir
+    }
+
+
+let runClientDev =
+    BuildTask.create "RunClientDev" [ preBuildClient ] {
+        runFable clientProjectDir DEV false
         [
             async {
-                buildClientJs DEV true
+                runFable clientProjectDir DEV true
             }
             async {
-                let watchers =
-                    !!"./src/Client/www/css/app-dev.css"
-                    ++"./src/Client/www/tailwind.config.js"
-                    |> Seq.toList
-                    |> List.map (watchFile buildClientCss)
-                
-                Shell.cleanDir "./src/Client/www/.dist"
-                yarn "parcel serve index.html --out-dir .dist" "./src/Client/www"
-
+                let watchers = watchTailwindCss clientProjectDir
+                serveDevJs clientProjectDir
                 printfn "Clean up..."
                 watchers |> List.iter (fun x -> x.Dispose())
             }
@@ -94,14 +112,11 @@ let runDev =
     }
 
 
-let bundleProd =
-    BuildTask.create "BundleProd" [ checkEnv ] {
-        Shell.cleanDir "./src/Client/www/.clientjs"
-        Shell.cleanDir "./src/Client/www/.dist_prod"
-        buildClientCss()
-        buildClientJs PROD false
-        yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" "./src/Client/www"
+let bundleClientProd =
+    BuildTask.create "BundleClientProd" [ preBuildClient ] {
+        runFable clientProjectDir PROD false
+        runBundle clientProjectDir
     }
 
 
-BuildTask.runOrDefault runDev
+BuildTask.runOrDefault runClientDev

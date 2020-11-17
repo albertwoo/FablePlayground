@@ -14,7 +14,4 @@
 		<PackageReference Include="Feliz" Version="1.16.2" />
 		<PackageReference Include="Zanaptak.TypedCssClasses" Version="0.4.0" />
 	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Share\Share.fsproj" />
-	</ItemGroup>
 </Project>
