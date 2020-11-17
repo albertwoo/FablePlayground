@@ -3,17 +3,11 @@ module.exports = {
         // removeDeprecatedGapUtilities: true,
         // purgeLayersByDefault: true,
     },
-    purge: [],
+    purge: {
+        enabled: false
+    },
     theme: {
-        extend: {
-            colors: {
-                cyan: '#9cdbff',
-            },
-            margin: {
-                '96': '24rem',
-                '128': '32rem',
-            },
-        }
+        extend: {},
     },
     variants: {},
     plugins: [],

@@ -1,5 +1,6 @@
 *.fs.js
 *proj.user
+*tailwind-generated.css
 .ionide
 .fable
 .cache

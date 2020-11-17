@@ -60,7 +60,7 @@ let cleanGeneratedJs dir = Shell.cleanDir (dir </> "www/fablejs")
 // It will generate css under the starget dir`s www/css folder
 let buildTailwindCss dir =
     printfn "Build client css"
-    yarn "tailwindcss build css/app-dev.css -o css/app.css" (dir </> "www")
+    yarn "tailwindcss build css/app.css -o css/tailwind-generated.css" (dir </> "www")
 
 let watchTailwindCss dir =
     !!(dir </> "www/css/app-dev.css")
@@ -70,11 +70,11 @@ let watchTailwindCss dir =
 
 let serveDevJs dir =
     Shell.cleanDir (dir </> "www/.dist")
-    yarn "parcel serve index.html --out-dir .dist" (dir </> "www")
+    yarn "parcel serve index.html --dist-dir .dist" (dir </> "www")
 
 let runBundle dir =
     Shell.cleanDir (dir </> "www/.dist_prod")
-    yarn "parcel build index.html --out-dir .dist_prod --public-url ./ --no-source-maps" (dir </> "www")
+    yarn "parcel build index.html --dist-dir .dist_prod --public-url ./ --no-source-maps" (dir </> "www")
 
 
 let checkEnv =
