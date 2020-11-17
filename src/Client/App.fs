@@ -9,7 +9,7 @@ open Feliz
 
 type State = { Count: int }
 
-type Msg = Increase
+type Msg = Increase | Decrease
 
 
 let init() = { Count = 0 }
@@ -18,6 +18,7 @@ let init() = { Count = 0 }
 let update (msg: Msg) (state: State) =
     match msg with
     | Increase -> { state with Count = state.Count + 1 }
+    | Decrease -> { state with Count = state.Count - 1 }
         
 
 let render (state: State) (dispatch: Msg -> unit) =
@@ -42,13 +43,21 @@ let render (state: State) (dispatch: Msg -> unit) =
                         prop.classes [ Tw.``text-center``; Tw.``text-4xl``; Tw.``font-semibold``; Tw.``h-20``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
                         prop.children [ Html.div state.Count ]
                     ]
+                    Html.button [
+                        prop.text "\\/"
+                        prop.onClick (fun _ -> Decrease |> dispatch)
+                        prop.classes [
+                            Tw.``text-center``; Tw.``bg-green-500``; Tw.``w-full``; Tw.``cursor-pointer``; Tw.``text-sm``
+                            Tw.``text-white``; Tw.``py-1``; Tw.``outline-none``; Tw.``focus:outline-none``; Tw.``hover:bg-green-600``; Tw.``ease-linear``
+                        ]
+                    ]
                 ]
             ]
         ]
     ]
 
 
-Common.importRequiredResources()
+Common.importRequiredAssets()
 
 Program.mkSimple init update render
 #if DEBUG

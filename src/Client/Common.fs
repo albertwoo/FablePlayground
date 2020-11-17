@@ -12,4 +12,4 @@ type Tw = CssClasses<TailwindCssPath, Naming.Verbatim>
 
 
 // Use this to ensure this file is referenced so the css or other assets can be imported
-let importRequiredResources() = ()
+let importRequiredAssets() = ()
