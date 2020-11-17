@@ -80,7 +80,7 @@ let runBundle dir =
 let checkEnv =
     BuildTask.create "Check environment" [] {
         yarn "--version" ""
-        yarn "install" "./src/Client/www"
+        yarn "install" (clientProjectDir </> "www")
         dotnet "tool restore" ""
     }
 
