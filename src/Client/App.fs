@@ -17,8 +17,7 @@ let init() = { Count = 0 }
 
 let update (msg: Msg) (state: State) =
     match msg with
-    | Increase ->
-        { state with Count = state.Count + 1 }
+    | Increase -> { state with Count = state.Count + 1 }
         
 
 let render (state: State) (dispatch: Msg -> unit) =
@@ -48,6 +47,8 @@ let render (state: State) (dispatch: Msg -> unit) =
         ]
     ]
 
+
+Common.importRequiredResources()
 
 Program.mkSimple init update render
 #if DEBUG
