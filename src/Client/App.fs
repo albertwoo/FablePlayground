@@ -2,7 +2,6 @@ module App
 
 open Elmish
 open Elmish.React
-open Elmish.Debug
 open Elmish.HMR
 open Feliz
 
@@ -53,15 +52,13 @@ let render (state: State) (dispatch: Msg -> unit) =
                     ]
                 ]
             ]
+            Counter.Counter()
         ]
     ]
 
 
-Common.importRequiredAssets()
+importRequiredAssets()
 
 Program.mkSimple init update render
-#if DEBUG
-|> Program.withDebugger
-#endif
 |> Program.withReactSynchronous "elmish-app"
 |> Program.run
