@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "react": "^16.14.0",
-    "react-dom": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",
     "autoprefixer": "^9.8.6",
     "postcss-nested": "^4.2.3",
