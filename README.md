@@ -2,7 +2,7 @@
 
 Try to make a lightest and simpliest project template powered by fable for starter and fun.
 
-Build in features: tailwindcss, hmr (hot reload), feliz.
+Build in features: tailwindcss, hmr (hot reload), fast refresh, feliz.
 
 Make sure `dotnet core sdk (>= 5.0)`, `yarn` is installed
 

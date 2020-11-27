@@ -4,6 +4,8 @@ open Elmish
 open Elmish.React
 open Elmish.HMR
 open Feliz
+open type Html
+open type prop
 
 
 type State = { Count: int }
@@ -20,36 +22,32 @@ let update (msg: Msg) (state: State) =
     | Decrease -> { state with Count = state.Count - 1 }
         
 
+[<ReactComponent>]
+let counterButton (content: string) (onClicked: unit -> unit) =
+    button [
+        text content
+        onClick (fun _ -> onClicked())
+        classes [
+            Tw.``text-center``; Tw.``bg-green-200``; Tw.``w-full``; Tw.``cursor-pointer``; Tw.``text-sm``
+            Tw.``py-1``; Tw.``outline-none``; Tw.``focus:outline-none``; Tw.``hover:bg-green-600``; Tw.``hover:text-white``; Tw.``ease-linear``
+        ]
+    ]
+
 let render (state: State) (dispatch: Msg -> unit) =
-    Html.div [
-        prop.classes [ Tw.``h-screen``; Tw.``w-screen``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
-        prop.children [
-            Html.div [ 
-                prop.classes [
-                    Tw.``w-32``; Tw.rounded; Tw.``shadow-lg``; Tw.``hover:shadow-2xl``;
-                    Tw.``bg-pink-200``; Tw.``overflow-hidden``
-                ]
-                prop.children [
-                    Html.button [
-                        prop.text "/\\"
-                        prop.onClick (fun _ -> Increase |> dispatch)
-                        prop.classes [
-                            Tw.``text-center``; Tw.``bg-green-500``; Tw.``w-full``; Tw.``cursor-pointer``; Tw.``text-sm``
-                            Tw.``text-white``; Tw.``py-1``; Tw.``outline-none``; Tw.``focus:outline-none``; Tw.``hover:bg-green-600``; Tw.``ease-linear``
+    div [
+        classes [ Tw.``h-screen``; Tw.``w-screen``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
+        children [
+            div [ 
+                classes [ Tw.rounded; Tw.``shadow-lg``; Tw.``hover:shadow-2xl``; Tw.``bg-green-100``; Tw.``overflow-hidden`` ]
+                children [
+                    counterButton "/\\" (fun _ -> Increase |> dispatch)
+                    div [
+                        classes [ Tw.``text-center``; Tw.``font-semibold``; Tw.flex; Tw.``items-center``; Tw.``justify-center``; Tw.``p-6`` ]
+                        children [
+                            Html.div $"Elmish counter {state.Count}"
                         ]
                     ]
-                    Html.div [
-                        prop.classes [ Tw.``text-center``; Tw.``text-4xl``; Tw.``font-semibold``; Tw.``h-20``; Tw.flex; Tw.``items-center``; Tw.``justify-center`` ]
-                        prop.children [ Html.div state.Count ]
-                    ]
-                    Html.button [
-                        prop.text "\\/"
-                        prop.onClick (fun _ -> Decrease |> dispatch)
-                        prop.classes [
-                            Tw.``text-center``; Tw.``bg-green-500``; Tw.``w-full``; Tw.``cursor-pointer``; Tw.``text-sm``
-                            Tw.``text-white``; Tw.``py-1``; Tw.``outline-none``; Tw.``focus:outline-none``; Tw.``hover:bg-green-600``; Tw.``ease-linear``
-                        ]
-                    ]
+                    counterButton "\/" (fun _ -> Decrease |> dispatch)
                 ]
             ]
             Counter.Counter()

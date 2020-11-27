@@ -70,7 +70,7 @@ let watchTailwindCss dir =
 
 let serveDevJs dir =
     Shell.cleanDir (dir </> "www/.dist")
-    yarn "parcel serve index.html --dist-dir .dist" (dir </> "www")
+    yarn "parcel index.html --dist-dir .dist" (dir </> "www")
 
 let runBundle dir =
     Shell.cleanDir (dir </> "www/.dist_prod")

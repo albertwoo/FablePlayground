@@ -5,11 +5,11 @@
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",
-    "autoprefixer": "^9.8.6",
-    "postcss-nested": "^4.2.3",
-    "parcel": "2.0.0-nightly.447",
-    "postcss": "^8.0.0",
+    "autoprefixer": "^10.0.3",
+    "postcss-nested": "^5.0.1",
+    "parcel": "2.0.0-nightly.462",
+    "postcss": "^8.1.10",
     "remotedev": "^0.2.9",
-    "tailwindcss": "^1.9.6"
+    "tailwindcss": "^2.0.1"
   }
 }
