@@ -1,1 +1,3 @@
-> 0.25%, ie 11
+defaults
+not IE 11
+maintained node versions

@@ -23,7 +23,7 @@ let update (msg: Msg) (state: State) =
         
 
 [<ReactComponent>]
-let counterButton (content: string) (onClicked: unit -> unit) =
+let CounterButton (content: string) (onClicked: unit -> unit) =
     button [
         text content
         onClick (fun _ -> onClicked())
@@ -40,14 +40,14 @@ let render (state: State) (dispatch: Msg -> unit) =
             div [ 
                 classes [ Tw.rounded; Tw.``shadow-lg``; Tw.``hover:shadow-2xl``; Tw.``bg-green-100``; Tw.``overflow-hidden`` ]
                 children [
-                    counterButton "/\\" (fun _ -> Increase |> dispatch)
+                    CounterButton "/\\" (fun _ -> Increase |> dispatch)
                     div [
                         classes [ Tw.``text-center``; Tw.``font-semibold``; Tw.flex; Tw.``items-center``; Tw.``justify-center``; Tw.``p-6`` ]
                         children [
                             Html.div $"Elmish counter {state.Count}"
                         ]
                     ]
-                    counterButton "\/" (fun _ -> Decrease |> dispatch)
+                    CounterButton "\/" (fun _ -> Decrease |> dispatch)
                 ]
             ]
             Counter.Counter()
