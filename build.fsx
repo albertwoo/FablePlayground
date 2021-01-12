@@ -74,7 +74,7 @@ let serveDevJs dir =
 
 let runBundle dir =
     Shell.cleanDir (dir </> "www/.dist_prod")
-    yarn "parcel build index.html --dist-dir .dist_prod --public-url ./ --no-source-maps" (dir </> "www")
+    yarn "parcel build index.html --dist-dir .dist_prod --public-url ./ --no-source-maps --no-cache" (dir </> "www")
 
 
 let checkEnv =
