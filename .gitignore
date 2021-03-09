@@ -15,3 +15,4 @@ node_modules
 dist
 devClient
 src/Client/www/.DS_Store
+publish/

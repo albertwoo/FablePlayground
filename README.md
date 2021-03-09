@@ -12,4 +12,4 @@ Make sure `dotnet core sdk (>= 5.0)`, `yarn` is installed
 
 ### For PRO
 
-`dotnet fsi build.fsx --target BundleClientProd`
+`dotnet fsi build.fsx --target BundleClient`
