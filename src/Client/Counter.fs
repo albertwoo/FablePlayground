@@ -20,9 +20,13 @@ let Counter () =
                 text $"Fast refresh counter {count}"
             ]
             button [
-                text "Increment"
                 onClick (fun _ -> setCount(count + 1))
-                classes [ Tw.``bg-blue-500``; Tw.rounded; Tw.``px-4``; Tw.``py-1``; Tw.``mt-4``; Tw.``hover:bg-blue-400``; Tw.``text-white``; Tw.``focus:ring-4``; Tw.``focus:ring-blue-600`` ]
+                classes [ Tw.``bg-blue-500``; Tw.``rounded-full``; Tw.``w-10``; Tw.``h-10``; Tw.``mt-4``; Tw.``hover:bg-blue-400``; Tw.``text-white``; Tw.``focus:ring-4``; Tw.``focus:ring-blue-600`` ]
+                children [
+                    span [
+                        classes [ Ic.``icon-plus``;  ]
+                    ]
+                ]
             ]
         ]
     ]
